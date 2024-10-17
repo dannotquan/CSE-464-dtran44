@@ -2,6 +2,7 @@ package daniel.tran;
 
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,12 +60,17 @@ public class GraphManagerTest {
 
         graphManager.addEdge("i", "j");
         graphManager.outputDOTGraph("test/output_feature_4.dot");
+        graphManager.outputGraphics("test/output_feature_4_graphic", "png");
 
         Path path = Paths.get("test/output_feature_4.dot");
         String outputContent = Files.readString(path);
         assertTrue(outputContent.contains("i -> j;"));
 
+        File graphicOutput = new File("test/output_feature_4_graphic.png");
+        assertTrue(graphicOutput.exists());
+
         Files.deleteIfExists(path);
+        Files.deleteIfExists(Path.of("test/output_feature_4_graphic.png"));
     }
 
     public GraphManagerTest() throws IOException {
