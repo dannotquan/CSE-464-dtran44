@@ -4,9 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>Project-1</artifactId>
+    <groupId>asu</groupId>
+    <artifactId>CSE464-GraphManager</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <name>CSE 464 Course Project</name>
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>

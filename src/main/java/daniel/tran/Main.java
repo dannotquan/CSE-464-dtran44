@@ -2,10 +2,10 @@ package daniel.tran;
 
 public class Main {
     public static void main(String[] args) {
-        Grapher grapher = new Grapher();
+        GraphManager graphManager = new GraphManager();
 
-        grapher.parseGraph("input.dot");
+        graphManager.parseGraph("input.dot");
 
-        System.out.println(grapher);
+        System.out.println(graphManager);
     }
 }

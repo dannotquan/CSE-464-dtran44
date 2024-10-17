@@ -8,10 +8,10 @@ import org.jgrapht.nio.dot.DOTImporter;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class Grapher {
+public class GraphManager {
     private Graph<String, DefaultEdge> graph;
 
-    public Grapher() {
+    public GraphManager() {
         this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
     }
 
