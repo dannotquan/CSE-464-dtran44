@@ -3,6 +3,7 @@ package daniel.tran;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.nio.dot.DOTExporter;
 import org.jgrapht.nio.dot.DOTImporter;
 
 import java.io.FileReader;
@@ -89,5 +90,15 @@ public class GraphManager {
         }
 
         graph.addEdge(srcLabel, dstLabel);
+    }
+
+    public void outputDOTGraph(String path) {
+        DOTExporter<String, DefaultEdge> exporter = new DOTExporter<>(v -> v.toString());
+
+        try {
+            exporter.exportGraph(graph, Files.newBufferedWriter(Paths.get(path)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
