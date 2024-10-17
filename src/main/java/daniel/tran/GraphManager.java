@@ -24,6 +24,10 @@ public class GraphManager {
         this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
     }
 
+    public Graph<String, DefaultEdge> getGraph() {
+        return this.graph;
+    }
+
     public void parseGraph(String path) {
         DOTImporter<String, DefaultEdge> importer = new DOTImporter<>();
         importer.setVertexFactory(label -> label);
