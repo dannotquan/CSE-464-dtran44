@@ -5,5 +5,7 @@ public class Main {
         Grapher grapher = new Grapher();
 
         grapher.parseGraph("input.dot");
+
+        System.out.println(grapher);
     }
 }

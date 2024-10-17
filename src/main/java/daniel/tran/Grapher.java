@@ -25,4 +25,26 @@ public class Grapher {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Number of nodes: ").append(graph.vertexSet().size()).append("\n");
+        sb.append("Number of edges: ").append(graph.edgeSet().size()).append("\n\nNodes: [");
+
+        for (String vertex : graph.vertexSet()) {
+            sb.append(vertex).append(", ");
+        }
+
+        sb.deleteCharAt(sb.length() - 2); //  Delete the last ","
+        sb.deleteCharAt(sb.length() - 1); //  Delete the last " "
+
+        sb.append("]\nEdges:\n");
+
+        for (DefaultEdge edge : graph.edgeSet()) {
+            sb.append(graph.getEdgeSource(edge)).append(" -> ").append(graph.getEdgeTarget(edge)).append("\n");
+        }
+
+        return sb.toString();
+    }
 }
