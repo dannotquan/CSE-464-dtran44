@@ -5,6 +5,6 @@ public class Main {
         GraphManager graphManager = new GraphManager();
 
         graphManager.parseGraph("input.dot");
-        graphManager.outputDOTGraph("test.dot");
+        graphManager.outputGraphics("test", "png");
     }
 }

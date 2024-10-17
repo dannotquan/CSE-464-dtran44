@@ -1,13 +1,19 @@
 package daniel.tran;
 
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.model.MutableGraph;
+import guru.nidi.graphviz.parse.Parser;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.nio.dot.DOTExporter;
 import org.jgrapht.nio.dot.DOTImporter;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -97,6 +103,32 @@ public class GraphManager {
 
         try {
             exporter.exportGraph(graph, Files.newBufferedWriter(Paths.get(path)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void outputGraphics(String path, String format) {
+        DOTExporter<String, DefaultEdge> exporter = new DOTExporter<>(v -> v.toString());
+
+        Format fileFormat = switch (format.toLowerCase()) {
+            case "svg" -> Format.SVG;
+            case "plain" -> Format.PLAIN;
+            case "plain-ext" -> Format.PLAIN_EXT;
+            case "ps" -> Format.PS;
+            case "json" -> Format.JSON;
+            case "dot" -> Format.DOT;
+            case "xdot" -> Format.XDOT;
+            default -> Format.PNG;
+        };
+
+        StringWriter writer = new StringWriter();
+        exporter.exportGraph(graph, writer);
+
+        Parser parser = new Parser();
+        try {
+            MutableGraph exportGraph = parser.read(writer.toString());
+            Graphviz.fromGraph(exportGraph).render(fileFormat).toFile(new File(path + "." + format.toLowerCase()));
         } catch (IOException e) {
             e.printStackTrace();
         }
