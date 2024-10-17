@@ -7,6 +7,8 @@ public class Main {
         graphManager.parseGraph("input.dot");
 
         graphManager.addNodes(newNodes);
+        graphManager.addEdge("i", "j");
+        graphManager.addEdge("i", "k");
         System.out.println(graphManager);
         graphManager.outputGraph("test.txt");
     }

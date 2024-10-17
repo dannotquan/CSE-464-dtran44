@@ -58,18 +58,36 @@ public class GraphManager {
         }
     }
 
-    public void addNode(String label) {
+    private boolean addN(String label) {
         if (graph.containsVertex(label)) {
-            System.out.println("Node \"" + label + "\" already in graph.");
-            return;
+            return true;
         }
 
         graph.addVertex(label);
+        return false;
+    }
+
+    public void addNode(String label) {
+        if (this.addN(label)) {
+            System.out.println("Node \"" + label + "\" already in graph.");
+        }
     }
 
     public void addNodes(String[] labels) {
         for (String label : labels) {
             addNode(label);
         }
+    }
+
+    public void addEdge(String srcLabel, String dstLabel) {
+        this.addN(srcLabel);
+        this.addN(dstLabel);
+
+        if (graph.containsEdge(srcLabel, dstLabel)) {
+            System.out.println("Edge from \"" + srcLabel + "\" to \"" + dstLabel + "\" already in graph.");
+            return;
+        }
+
+        graph.addEdge(srcLabel, dstLabel);
     }
 }
