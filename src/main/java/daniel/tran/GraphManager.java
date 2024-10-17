@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class GraphManager {
-    private Graph<String, DefaultEdge> graph;
+    private final Graph<String, DefaultEdge> graph;
 
     public GraphManager() {
         this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
@@ -55,6 +55,21 @@ public class GraphManager {
             Files.writeString(Paths.get(filepath), toString());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void addNode(String label) {
+        if (graph.containsVertex(label)) {
+            System.out.println("Node \"" + label + "\" already in graph.");
+            return;
+        }
+
+        graph.addVertex(label);
+    }
+
+    public void addNodes(String[] labels) {
+        for (String label : labels) {
+            addNode(label);
         }
     }
 }
