@@ -137,4 +137,31 @@ public class GraphManager {
             e.printStackTrace();
         }
     }
+
+    public boolean removeNode(String label) {
+        if (!graph.containsVertex(label)) {
+            return false;
+        }
+        graph.removeVertex(label);
+        return true;
+    }
+
+    public boolean removeNodes(String[] labels) {
+        for (String label : labels) {
+            boolean success = removeNode(label);
+
+            if (!success) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean removeEdge(String srcLabel, String dstLabel) {
+        if (!graph.containsEdge(srcLabel, dstLabel)) {
+            return false;
+        }
+        graph.removeEdge(srcLabel, dstLabel);
+        return true;
+    }
 }
