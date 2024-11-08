@@ -14,6 +14,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class GraphManagerTest {
     public String getResourcePath(String filename) throws URISyntaxException {
@@ -53,10 +54,10 @@ public class GraphManagerTest {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
-        graphManager.addNode("i");
+        assertTrue(graphManager.addNode("i"));
         assertEquals(9, graphManager.getGraph().vertexSet().size());  //  Number of nodes should be 9
 
-        graphManager.addNodes(Arrays.asList("j", "a", "k").toArray(new String[0]));
+        assertFalse(graphManager.addNodes(Arrays.asList("j", "a", "k").toArray(new String[0]))); // "a" is duplicated
         assertEquals(11, graphManager.getGraph().vertexSet().size());  //  Number of nodes should be 11
     }
 
@@ -65,7 +66,7 @@ public class GraphManagerTest {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
-        graphManager.addEdge("i", "j");
+        assertTrue(graphManager.addEdge("i", "j"));
         assertEquals(10, graphManager.getGraph().vertexSet().size());  //  Number of nodes should be 10
         assertEquals(10, graphManager.getGraph().edgeSet().size());    //  Number of edges should be 10
     }
@@ -75,7 +76,7 @@ public class GraphManagerTest {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
-        graphManager.addEdge("i", "j");
+        assertTrue(graphManager.addEdge("i", "j"));
         graphManager.outputDOTGraph(generateResourcePath("output_feature_4.dot"));
         graphManager.outputGraphics(generateResourcePath("output_feature_4_graphic"), "png");
 
@@ -90,10 +91,33 @@ public class GraphManagerTest {
         Files.deleteIfExists(Path.of(getResourcePath("output_feature_4_graphic.png")));
     }
 
-    public GraphManagerTest() throws IOException, URISyntaxException {
-        testFeature1();
-        testFeature2();
-        testFeature3();
-        testFeature4();
+    @Test
+    public void testScenario1() throws IOException, URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_input.dot"));
+
+        assertTrue(graphManager.removeNode("a"));
+        assertTrue(graphManager.removeNode("b"));
+        assertTrue(graphManager.removeNodes(Arrays.asList("c", "d").toArray(new String[0])));
+
+        assertTrue(graphManager.removeEdge("e", "f"));
+    }
+
+    @Test
+    public void testScenario2() throws IOException, URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_input.dot"));
+
+        assertTrue(graphManager.removeNode("a"));
+        assertTrue(graphManager.removeNode("z"));
+    }
+
+    @Test
+    public void testScenario3() throws IOException, URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_input.dot"));
+
+        assertTrue(graphManager.removeEdge("a", "e"));
+        assertTrue(graphManager.removeEdge("e", "a"));
     }
 }

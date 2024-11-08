@@ -78,28 +78,42 @@ public class GraphManager {
         return false;
     }
 
-    public void addNode(String label) {
-        if (this.addN(label)) {
+    public boolean addNode(String label) {
+        boolean result = this.addN(label);
+
+        if (result) {
             System.out.println("Node \"" + label + "\" already in graph.");
+            return false;
         }
+
+        return true;
     }
 
-    public void addNodes(String[] labels) {
+    public boolean addNodes(String[] labels) {
+        boolean state = true;
+
         for (String label : labels) {
-            addNode(label);
+            boolean success = addNode(label);
+
+            if (!success) {
+                state = false;
+            }
         }
+
+        return state;
     }
 
-    public void addEdge(String srcLabel, String dstLabel) {
+    public boolean addEdge(String srcLabel, String dstLabel) {
         this.addN(srcLabel);
         this.addN(dstLabel);
 
         if (graph.containsEdge(srcLabel, dstLabel)) {
             System.out.println("Edge from \"" + srcLabel + "\" to \"" + dstLabel + "\" already in graph.");
-            return;
+            return false;
         }
 
         graph.addEdge(srcLabel, dstLabel);
+        return graph.containsEdge(srcLabel, dstLabel);
     }
 
     public void outputDOTGraph(String path) {
@@ -140,27 +154,34 @@ public class GraphManager {
 
     public boolean removeNode(String label) {
         if (!graph.containsVertex(label)) {
+            System.out.println("Node \"" + label + "\" doesn't exist in graph.");
             return false;
         }
+
         graph.removeVertex(label);
         return true;
     }
 
     public boolean removeNodes(String[] labels) {
+        boolean state = true;
+
         for (String label : labels) {
             boolean success = removeNode(label);
 
             if (!success) {
-                return false;
+                state = false;
             }
         }
-        return true;
+
+        return state;
     }
 
     public boolean removeEdge(String srcLabel, String dstLabel) {
         if (!graph.containsEdge(srcLabel, dstLabel)) {
+            System.out.println("Edge from \"" + srcLabel + "\" to \"" + dstLabel + "\" doesn't exist in graph.");
             return false;
         }
+
         graph.removeEdge(srcLabel, dstLabel);
         return true;
     }
