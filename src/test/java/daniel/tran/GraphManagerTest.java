@@ -104,23 +104,23 @@ public class GraphManagerTest {
         assertTrue(graphManager.removeEdge("e", "f"));
     }
 
-//    @Test
-//    public void scenario_2_test() throws URISyntaxException {
-//        GraphManager graphManager = new GraphManager();
-//        graphManager.parseGraph(getResourcePath("test_input.dot"));
-//
-//        assertTrue(graphManager.removeNode("a"));
-//        assertTrue(graphManager.removeNode("z"));
-//    }
-//
-//    @Test
-//    public void scenario_3_test() throws URISyntaxException {
-//        GraphManager graphManager = new GraphManager();
-//        graphManager.parseGraph(getResourcePath("test_input.dot"));
-//
-//        assertTrue(graphManager.removeEdge("a", "e"));
-//        assertTrue(graphManager.removeEdge("e", "a"));
-//    }
+    @Test
+    public void scenario_2_test() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_input.dot"));
+
+        assertTrue(graphManager.removeNode("a"));
+        assertTrue(graphManager.removeNode("z"));
+    }
+
+    @Test
+    public void scenario_3_test() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_input.dot"));
+
+        assertTrue(graphManager.removeEdge("a", "e"));
+        assertTrue(graphManager.removeEdge("e", "a"));
+    }
 
     @Test
     public void BFS_test_1() throws URISyntaxException {
