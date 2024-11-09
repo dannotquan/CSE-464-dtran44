@@ -19,6 +19,11 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class GraphManager {
+    public enum Algorithm {
+        BFS,
+        DFS
+    }
+
     private final Graph<String, DefaultEdge> graph;
 
     public GraphManager() {
@@ -187,7 +192,7 @@ public class GraphManager {
         return true;
     }
 
-    public Path GraphSearch(String srcLabel, String dstLabel) {
+    public Path GraphSearch(String srcLabel, String dstLabel, Algorithm algo) {
         if (!graph.containsVertex(srcLabel)) {
             System.out.println("Source node \"" + srcLabel + "\" doesn't exist in graph.");
             return null;
@@ -198,81 +203,75 @@ public class GraphManager {
             return null;
         }
 
-        Queue<String> queue = new LinkedList<>();
-        Set<String> visited = new HashSet<>();
-        Map<String, String> predecessors = new HashMap<>();
+        if (algo == Algorithm.BFS) {
+            Queue<String> queue = new LinkedList<>();
+            Set<String> visited = new HashSet<>();
+            Map<String, String> predecessors = new HashMap<>();
 
-        queue.add(srcLabel);
-        visited.add(srcLabel);
+            queue.add(srcLabel);
+            visited.add(srcLabel);
 
-        while (!queue.isEmpty()) {
-            String current = queue.poll();
+            while (!queue.isEmpty()) {
+                String current = queue.poll();
 
-            if (current.equals(dstLabel)) {
-                List<String> pathNodes = new LinkedList<>();
-                for (String at = dstLabel; at != null; at = predecessors.get(at)) {
-                    pathNodes.add(0, at);
-                }
-                return new Path(pathNodes);
-            }
-
-            for (DefaultEdge edge : graph.outgoingEdgesOf(current)) {
-                String neighbor = graph.getEdgeTarget(edge);
-                if (!visited.contains(neighbor)) {
-                    visited.add(neighbor);
-                    queue.add(neighbor);
-                    predecessors.put(neighbor, current);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public Path GraphSearch(String srcLabel, String dstLabel) {
-        if (!graph.containsVertex(srcLabel)) {
-            System.out.println("Source node \"" + srcLabel + "\" doesn't exist in graph.");
-            return null;
-        }
-
-        if (!graph.containsVertex(dstLabel)) {
-            System.out.println("Destination node \"" + dstLabel + "\" doesn't exist in graph.");
-            return null;
-        }
-
-        Set<String> discovered = new HashSet<>();
-        Map<String, String> predecessors = new HashMap<>();
-        Stack<Iterator<DefaultEdge>> stack = new Stack<>();
-        Stack<String> nodeStack = new Stack<>();
-
-        discovered.add(srcLabel);
-        nodeStack.push(srcLabel);
-        stack.push(graph.outgoingEdgesOf(srcLabel).iterator());
-
-        while (!stack.isEmpty()) {
-            Iterator<DefaultEdge> edges = stack.peek();
-
-            if (edges.hasNext()) {
-                DefaultEdge edge = edges.next();
-                String neighbor = graph.getEdgeTarget(edge);
-
-                if (!discovered.contains(neighbor)) {
-                    discovered.add(neighbor);
-                    predecessors.put(neighbor, nodeStack.peek());
-                    if (neighbor.equals(dstLabel)) {
-                        List<String> pathNodes = new LinkedList<>();
-                        for (String node = dstLabel; node != null; node = predecessors.get(node)) {
-                            pathNodes.add(0, node);
-                        }
-                        return new Path(pathNodes);
+                if (current.equals(dstLabel)) {
+                    List<String> pathNodes = new LinkedList<>();
+                    for (String at = dstLabel; at != null; at = predecessors.get(at)) {
+                        pathNodes.add(0, at);
                     }
-                    nodeStack.push(neighbor);
-                    stack.push(graph.outgoingEdgesOf(neighbor).iterator());
+                    return new Path(pathNodes);
                 }
-            } else {
-                stack.pop();
-                nodeStack.pop();
+
+                for (DefaultEdge edge : graph.outgoingEdgesOf(current)) {
+                    String neighbor = graph.getEdgeTarget(edge);
+                    if (!visited.contains(neighbor)) {
+                        visited.add(neighbor);
+                        queue.add(neighbor);
+                        predecessors.put(neighbor, current);
+                    }
+                }
             }
+
+            return null;
+        }
+
+        if (algo == Algorithm.DFS) {
+            Set<String> discovered = new HashSet<>();
+            Map<String, String> predecessors = new HashMap<>();
+            Stack<Iterator<DefaultEdge>> stack = new Stack<>();
+            Stack<String> nodeStack = new Stack<>();
+
+            discovered.add(srcLabel);
+            nodeStack.push(srcLabel);
+            stack.push(graph.outgoingEdgesOf(srcLabel).iterator());
+
+            while (!stack.isEmpty()) {
+                Iterator<DefaultEdge> edges = stack.peek();
+
+                if (edges.hasNext()) {
+                    DefaultEdge edge = edges.next();
+                    String neighbor = graph.getEdgeTarget(edge);
+
+                    if (!discovered.contains(neighbor)) {
+                        discovered.add(neighbor);
+                        predecessors.put(neighbor, nodeStack.peek());
+                        if (neighbor.equals(dstLabel)) {
+                            List<String> pathNodes = new LinkedList<>();
+                            for (String node = dstLabel; node != null; node = predecessors.get(node)) {
+                                pathNodes.add(0, node);
+                            }
+                            return new Path(pathNodes);
+                        }
+                        nodeStack.push(neighbor);
+                        stack.push(graph.outgoingEdgesOf(neighbor).iterator());
+                    }
+                } else {
+                    stack.pop();
+                    nodeStack.pop();
+                }
+            }
+
+            return null;
         }
 
         return null;
