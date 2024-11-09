@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.*;
 
 public class GraphManager {
     private final Graph<String, DefaultEdge> graph;
@@ -184,5 +185,47 @@ public class GraphManager {
 
         graph.removeEdge(srcLabel, dstLabel);
         return true;
+    }
+
+    public Path GraphSearch(String srcLabel, String dstLabel) {
+        if (!graph.containsVertex(srcLabel)) {
+            System.out.println("Source node \"" + srcLabel + "\" doesn't exist in graph.");
+            return null;
+        }
+
+        if (!graph.containsVertex(dstLabel)) {
+            System.out.println("Destination node \"" + dstLabel + "\" doesn't exist in graph.");
+            return null;
+        }
+
+        Queue<String> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        Map<String, String> predecessors = new HashMap<>();
+
+        queue.add(srcLabel);
+        visited.add(srcLabel);
+
+        while (!queue.isEmpty()) {
+            String current = queue.poll();
+
+            if (current.equals(dstLabel)) {
+                List<String> pathNodes = new LinkedList<>();
+                for (String at = dstLabel; at != null; at = predecessors.get(at)) {
+                    pathNodes.add(0, at);
+                }
+                return new Path(pathNodes);
+            }
+
+            for (DefaultEdge edge : graph.outgoingEdgesOf(current)) {
+                String neighbor = graph.getEdgeTarget(edge);
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    queue.add(neighbor);
+                    predecessors.put(neighbor, current);
+                }
+            }
+        }
+
+        return null;
     }
 }

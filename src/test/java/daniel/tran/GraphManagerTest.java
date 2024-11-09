@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -50,7 +51,7 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testFeature2() throws IOException, URISyntaxException {
+    public void testFeature2() throws URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
@@ -62,7 +63,7 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testFeature3() throws IOException, URISyntaxException {
+    public void testFeature3() throws URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
@@ -92,7 +93,7 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testScenario1() throws IOException, URISyntaxException {
+    public void testScenario1() throws URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
@@ -104,7 +105,7 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testScenario2() throws IOException, URISyntaxException {
+    public void testScenario2() throws URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
@@ -113,11 +114,62 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testScenario3() throws IOException, URISyntaxException {
+    public void testScenario3() throws URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
         assertTrue(graphManager.removeEdge("a", "e"));
         assertTrue(graphManager.removeEdge("e", "a"));
+    }
+
+    @Test
+    public void BFS_test_1() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_bfs_least_efficient.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "z");
+        assertNotNull(path, "Path should exist.");
+        assertEquals(path.toString(), "a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y -> z", "Expected: a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y -> z");
+        System.out.println(path);
+    }
+
+    @Test
+    public void BFS_test_2() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_input.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("b", "h");
+        assertNotNull(path, "Path should exist.");
+        assertEquals(path.toString(), "b -> c -> d -> a -> e -> f -> h", "Expected: b -> c -> d -> a -> e -> f -> h");
+        System.out.println(path);
+    }
+
+    @Test
+    public void BFS_test_3() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_bfs_least_efficient.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("z", "a");
+        assertNull(path, "Path should exist.");
+    }
+
+    @Test
+    public void BFS_test_4() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_input.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "z");
+        assertNull(path, "Path should be null due to z not exist.");
+    }
+
+    @Test
+    public void BFS_test_5() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_bfs_least_efficient_loop.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("z", "y");
+        assertNotNull(path, "Path should exist.");
+        assertEquals(path.toString(), "z -> a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y", "Expected: z -> a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y");
+        System.out.println(path);
     }
 }
