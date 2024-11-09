@@ -33,7 +33,7 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testFeature1() throws IOException, URISyntaxException {
+    public void feature_1_test() throws IOException, URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
@@ -51,7 +51,7 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testFeature2() throws URISyntaxException {
+    public void feature_2_test() throws URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
@@ -63,7 +63,7 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testFeature3() throws URISyntaxException {
+    public void feature_3_test() throws URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
@@ -73,7 +73,7 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testFeature4() throws IOException, URISyntaxException {
+    public void feature_4_test() throws IOException, URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
@@ -93,7 +93,7 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testScenario1() throws URISyntaxException {
+    public void scenario_1_test() throws URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
@@ -105,7 +105,7 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testScenario2() throws URISyntaxException {
+    public void scenario_2_test() throws URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
@@ -114,7 +114,7 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void testScenario3() throws URISyntaxException {
+    public void scenario_3_test() throws URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
@@ -127,7 +127,7 @@ public class GraphManagerTest {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_bfs_least_efficient.dot"));
 
-        daniel.tran.Path path = graphManager.GraphSearch("a", "z");
+        daniel.tran.Path path = graphManager.GraphSearch("a", "z", GraphManager.Algorithm.BFS);
         assertNotNull(path, "Path should exist.");
         assertEquals(path.toString(), "a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y -> z", "Expected: a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y -> z");
         System.out.println(path);
@@ -138,7 +138,7 @@ public class GraphManagerTest {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
-        daniel.tran.Path path = graphManager.GraphSearch("b", "h");
+        daniel.tran.Path path = graphManager.GraphSearch("b", "h", GraphManager.Algorithm.BFS);
         assertNotNull(path, "Path should exist.");
         assertEquals(path.toString(), "b -> c -> d -> a -> e -> f -> h", "Expected: b -> c -> d -> a -> e -> f -> h");
         System.out.println(path);
@@ -149,7 +149,7 @@ public class GraphManagerTest {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_bfs_least_efficient.dot"));
 
-        daniel.tran.Path path = graphManager.GraphSearch("z", "a");
+        daniel.tran.Path path = graphManager.GraphSearch("z", "a", GraphManager.Algorithm.BFS);
         assertNull(path, "Path should exist.");
     }
 
@@ -158,7 +158,7 @@ public class GraphManagerTest {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_input.dot"));
 
-        daniel.tran.Path path = graphManager.GraphSearch("a", "z");
+        daniel.tran.Path path = graphManager.GraphSearch("a", "z", GraphManager.Algorithm.BFS);
         assertNull(path, "Path should be null due to z not exist.");
     }
 
@@ -167,9 +167,105 @@ public class GraphManagerTest {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_bfs_least_efficient_loop.dot"));
 
-        daniel.tran.Path path = graphManager.GraphSearch("z", "y");
+        daniel.tran.Path path = graphManager.GraphSearch("z", "y", GraphManager.Algorithm.BFS);
         assertNotNull(path, "Path should exist.");
         assertEquals(path.toString(), "z -> a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y", "Expected: z -> a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y");
+        System.out.println(path);
+    }
+
+    @Test
+    public void DFS_test_1() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_dfs_least_efficient.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "z", GraphManager.Algorithm.DFS);
+        assertNotNull(path, "Path should exist.");
+        assertEquals(path.toString(), "a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y -> z", "Expected: a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y -> z");
+        System.out.println(path);
+    }
+
+    @Test
+    public void DFS_test_2() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_dfs_least_efficient.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "z5", GraphManager.Algorithm.DFS);
+        assertNotNull(path, "Path should exist.");
+        assertEquals(path.toString(), "a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y -> z -> z1 -> z2 -> z3 -> z4 -> z5", "Expected: a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> o -> p -> q -> r -> s -> t -> u -> v -> w -> x -> y -> z -> z1 -> z2 -> z3 -> z4 -> z5");
+        System.out.println(path);
+    }
+
+    //    DFS biggest weakness test
+    @Test
+    public void DFS_test_3() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_dfs_least_efficient.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "a5", GraphManager.Algorithm.DFS);
+        assertNotNull(path, "Path should exist.");
+
+        //  Most efficient would be a -> a1 -> a2 -> a3 -> a4 -> a5
+        assertEquals(path.toString(), "a -> b -> c -> c1 -> c2 -> c3 -> c4 -> c5 -> a1 -> a2 -> a3 -> a4 -> a5", "Expected: a -> b -> c -> c1 -> c2 -> c3 -> c4 -> c5 -> a1 -> a2 -> a3 -> a4 -> a5");
+        System.out.println(path);
+    }
+
+    @Test
+    public void DFS_test_4() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_dfs_least_efficient.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("z", "a", GraphManager.Algorithm.DFS);
+        assertNull(path, "Path should not exist.");
+        System.out.println(path);
+    }
+
+    @Test
+    public void DFS_test_5() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_dfs_least_efficient.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "aa", GraphManager.Algorithm.DFS);
+        assertNull(path, "Path should not exist due to aa not exist.");
+        System.out.println(path);
+    }
+
+    @Test
+    public void DFS_performance_test() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("kilo_graph.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "zz", GraphManager.Algorithm.DFS);
+        assertNotNull(path, "Path should exist.");
+        System.out.println(path);
+    }
+
+    @Test
+    public void DFS_mega_performance_test() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("mega_graph.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "zzz", GraphManager.Algorithm.DFS);
+        assertNotNull(path, "Path should exist.");
+        System.out.println(path);
+    }
+
+    @Test
+    public void DFS_giga_performance_test() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("giga_graph.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "z9999", GraphManager.Algorithm.DFS);
+        assertNotNull(path, "Path should exist.");
+        System.out.println(path);
+    }
+
+    @Test
+    public void DFS_tera_performance_test() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("tera_graph.dot"));
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "z99999", GraphManager.Algorithm.DFS);
+        assertNotNull(path, "Path should exist.");
         System.out.println(path);
     }
 }
