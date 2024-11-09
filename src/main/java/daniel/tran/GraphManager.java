@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.*;
 
 public class GraphManager {
     private final Graph<String, DefaultEdge> graph;
@@ -184,5 +185,54 @@ public class GraphManager {
 
         graph.removeEdge(srcLabel, dstLabel);
         return true;
+    }
+
+    public Path GraphSearch(String srcLabel, String dstLabel) {
+        if (!graph.containsVertex(srcLabel)) {
+            System.out.println("Source node \"" + srcLabel + "\" doesn't exist in graph.");
+            return null;
+        }
+
+        if (!graph.containsVertex(dstLabel)) {
+            System.out.println("Destination node \"" + dstLabel + "\" doesn't exist in graph.");
+            return null;
+        }
+
+        Set<String> discovered = new HashSet<>();
+        Map<String, String> predecessors = new HashMap<>();
+        Stack<Iterator<DefaultEdge>> stack = new Stack<>();
+        Stack<String> nodeStack = new Stack<>();
+
+        discovered.add(srcLabel);
+        nodeStack.push(srcLabel);
+        stack.push(graph.outgoingEdgesOf(srcLabel).iterator());
+
+        while (!stack.isEmpty()) {
+            Iterator<DefaultEdge> edges = stack.peek();
+
+            if (edges.hasNext()) {
+                DefaultEdge edge = edges.next();
+                String neighbor = graph.getEdgeTarget(edge);
+
+                if (!discovered.contains(neighbor)) {
+                    discovered.add(neighbor);
+                    predecessors.put(neighbor, nodeStack.peek());
+                    if (neighbor.equals(dstLabel)) {
+                        List<String> pathNodes = new LinkedList<>();
+                        for (String node = dstLabel; node != null; node = predecessors.get(node)) {
+                            pathNodes.add(0, node);
+                        }
+                        return new Path(pathNodes);
+                    }
+                    nodeStack.push(neighbor);
+                    stack.push(graph.outgoingEdgesOf(neighbor).iterator());
+                }
+            } else {
+                stack.pop();
+                nodeStack.pop();
+            }
+        }
+
+        return null;
     }
 }
