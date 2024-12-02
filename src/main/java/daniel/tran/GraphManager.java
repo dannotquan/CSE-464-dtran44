@@ -128,7 +128,9 @@ public class GraphManager {
         this.addN(srcLabel);
         this.addN(dstLabel);
 
-        if (graph.containsEdge(srcLabel, dstLabel)) {
+        boolean containsEdge = graph.containsEdge(srcLabel, dstLabel);
+
+        if (containsEdge) {
             System.out.println("Edge from \"" + srcLabel + "\" to \"" + dstLabel + "\" already in graph.");
             return false;
         }
