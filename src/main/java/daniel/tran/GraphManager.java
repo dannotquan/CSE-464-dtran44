@@ -196,7 +196,9 @@ public class GraphManager {
     }
 
     public boolean removeEdge(String srcLabel, String dstLabel) {
-        if (!graph.containsEdge(srcLabel, dstLabel)) {
+        boolean containsEdge = graph.containsEdge(srcLabel, dstLabel);
+
+        if (!containsEdge) {
             System.out.println("Edge from \"" + srcLabel + "\" to \"" + dstLabel + "\" doesn't exist in graph.");
             return false;
         }
