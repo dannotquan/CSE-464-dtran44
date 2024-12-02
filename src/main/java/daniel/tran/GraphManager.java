@@ -89,7 +89,9 @@ public class GraphManager {
     }
 
     private boolean addN(String label) {
-        if (graph.containsVertex(label)) {
+        boolean containsVertex = graph.containsVertex(label);
+
+        if (containsVertex) {
             return true;
         }
 
