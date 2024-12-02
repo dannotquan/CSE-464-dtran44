@@ -80,6 +80,10 @@ public class GraphManager {
         return sb.toString();
     }
 
+    private void printNodeNotExist(String label) {
+        System.out.println("Node \"" + label + "\" doesn't exist in graph.");
+    }
+
     public void outputGraph(String filepath) {
         try {
             Files.writeString(Paths.get(filepath), toString());
@@ -177,7 +181,7 @@ public class GraphManager {
 
     public boolean removeNode(String label) {
         if (!graph.containsVertex(label)) {
-            System.out.println("Node \"" + label + "\" doesn't exist in graph.");
+            printNodeNotExist(label);
             return false;
         }
 
@@ -213,12 +217,14 @@ public class GraphManager {
 
     public Path GraphSearch(String srcLabel, String dstLabel, Algorithm algo) {
         if (!graph.containsVertex(srcLabel)) {
-            System.out.println("Source node \"" + srcLabel + "\" doesn't exist in graph.");
+            System.out.print("Source ");
+            printNodeNotExist(srcLabel);
             return null;
         }
 
         if (!graph.containsVertex(dstLabel)) {
-            System.out.println("Destination node \"" + dstLabel + "\" doesn't exist in graph.");
+            System.out.print("Destination ");
+            printNodeNotExist(dstLabel);
             return null;
         }
 
