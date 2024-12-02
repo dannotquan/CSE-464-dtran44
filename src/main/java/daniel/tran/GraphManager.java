@@ -19,11 +19,6 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class GraphManager {
-    public enum Algorithm {
-        BFS,
-        DFS
-    }
-
     private final Graph<String, DefaultEdge> graph;
 
     public GraphManager() {
@@ -131,7 +126,7 @@ public class GraphManager {
     }
 
     public void outputDOTGraph(String path) {
-        DOTExporter<String, DefaultEdge> exporter = new DOTExporter<>(v -> v.toString());
+        DOTExporter<String, DefaultEdge> exporter = new DOTExporter<>(v -> v);
 
         try {
             exporter.exportGraph(graph, Files.newBufferedWriter(Paths.get(path)));
@@ -141,7 +136,7 @@ public class GraphManager {
     }
 
     public void outputGraphics(String path, String format) {
-        DOTExporter<String, DefaultEdge> exporter = new DOTExporter<>(v -> v.toString());
+        DOTExporter<String, DefaultEdge> exporter = new DOTExporter<>(v -> v);
 
         Format fileFormat = switch (format.toLowerCase()) {
             case "svg" -> Format.SVG;
@@ -229,7 +224,7 @@ public class GraphManager {
                 if (current.equals(dstLabel)) {
                     List<String> pathNodes = new LinkedList<>();
                     for (String at = dstLabel; at != null; at = predecessors.get(at)) {
-                        pathNodes.add(0, at);
+                        pathNodes.addFirst(at);
                     }
                     return new Path(pathNodes);
                 }
@@ -270,7 +265,7 @@ public class GraphManager {
                         if (neighbor.equals(dstLabel)) {
                             List<String> pathNodes = new LinkedList<>();
                             for (String node = dstLabel; node != null; node = predecessors.get(node)) {
-                                pathNodes.add(0, node);
+                                pathNodes.addFirst(node);
                             }
                             return new Path(pathNodes);
                         }
@@ -287,5 +282,10 @@ public class GraphManager {
         }
 
         return null;
+    }
+
+    public enum Algorithm {
+        BFS,
+        DFS
     }
 }
