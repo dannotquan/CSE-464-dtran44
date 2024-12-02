@@ -48,8 +48,16 @@ public class GraphManager {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Number of nodes: ").append(graph.vertexSet().size()).append("\n");
-        sb.append("Number of edges: ").append(graph.edgeSet().size()).append("\n\nNodes: [");
+
+        sb.append("Number of nodes: ");
+        sb.append(graph.vertexSet().size());
+        sb.append("\n");
+
+        sb.append("Number of edges: ");
+        sb.append(graph.edgeSet().size());
+        sb.append("\n");
+
+        sb.append("\nNodes: [");
 
         for (String vertex : graph.vertexSet()) {
             sb.append(vertex).append(", ");
@@ -61,7 +69,12 @@ public class GraphManager {
         sb.append("]\nEdges:\n");
 
         for (DefaultEdge edge : graph.edgeSet()) {
-            sb.append(graph.getEdgeSource(edge)).append(" -> ").append(graph.getEdgeTarget(edge)).append("\n");
+            var sourceEdge = graph.getEdgeSource(edge);
+            var targetEdge = graph.getEdgeTarget(edge);
+
+            sb.append(sourceEdge).append(" -> ");
+            sb.append(sourceEdge).append(targetEdge);
+            sb.append(sourceEdge).append("\n");
         }
 
         return sb.toString();
