@@ -1,0 +1,6 @@
+package daniel.tran;
+
+public interface SearchStrategy {
+    Path search(String srcLabel, String dstLabel);
+}
+
