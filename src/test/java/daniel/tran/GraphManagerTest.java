@@ -296,4 +296,52 @@ public class GraphManagerTest {
 
         System.out.println("Path: " + path);
     }
+
+    @Test
+    public void RandomWalk_test_1() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("test_input.dot"));
+        graphManager.setVerbose(true);
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "c", GraphManager.Algorithm.RANDOM_WALK);
+        assertNotNull(path, "Path should exist.");
+
+        System.out.println("Path: " + path);
+    }
+
+    @Test
+    public void RandomWalk_performance_test() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("kilo_graph.dot"));
+        graphManager.setVerbose(true);
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "zy", GraphManager.Algorithm.RANDOM_WALK);
+        assertNotNull(path, "Path should exist.");
+
+        System.out.println("Path: " + path);
+    }
+
+    @Test
+    public void RandomWalk_mega_performance_test() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("mega_graph.dot"));
+        graphManager.setVerbose(true);
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "zzy", GraphManager.Algorithm.RANDOM_WALK);
+        assertNotNull(path, "Path should exist.");
+
+        System.out.println("Path: " + path);
+    }
+
+    @Test
+    public void RandomWalk_giga_performance_test() throws URISyntaxException {
+        GraphManager graphManager = new GraphManager();
+        graphManager.parseGraph(getResourcePath("giga_graph.dot"));
+        graphManager.setVerbose(true);
+
+        daniel.tran.Path path = graphManager.GraphSearch("a", "z9998", GraphManager.Algorithm.RANDOM_WALK);
+        assertNotNull(path, "Path should exist.");
+
+        System.out.println("Path: " + path);
+    }
 }
