@@ -14,4 +14,9 @@ public class DFS_Strategy implements SearchStrategy {
     public Path search(String srcLabel, String dstLabel) {
         return dfs.traverse(srcLabel, dstLabel);
     }
+
+    @Override
+    public void setVerbose(boolean verbose) {
+        dfs.setVerbose(verbose);
+    }
 }

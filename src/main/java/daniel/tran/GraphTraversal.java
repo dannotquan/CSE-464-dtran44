@@ -9,9 +9,14 @@ public abstract class GraphTraversal {
     protected final Graph<String, DefaultEdge> graph;
     protected Set<String> visited;
     protected Map<String, String> predecessors;
+    protected boolean verbose = false;
 
     public GraphTraversal(Graph<String, DefaultEdge> graph) {
         this.graph = graph;
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 
     public Path traverse(String srcLabel, String dstLabel) {
@@ -22,7 +27,15 @@ public abstract class GraphTraversal {
         while (!isEmpty()) {
             String current = getNextNode();
 
+            if (verbose) {
+                System.out.println("Visiting Node: " + current);
+            }
+
             if (current.equals(dstLabel)) {
+                if (verbose) {
+                    System.out.println("Destination node found!");
+                }
+
                 return constructPath(dstLabel);
             }
 
@@ -36,6 +49,10 @@ public abstract class GraphTraversal {
             }
         }
 
+        if (verbose) {
+            System.out.println("Destination not found.");
+        }
+
         return null;
     }
 
@@ -47,7 +64,7 @@ public abstract class GraphTraversal {
 
     protected abstract void addNode(String node);
 
-    private Path constructPath(String dstLabel) {
+    protected Path constructPath(String dstLabel) {
         LinkedList<String> pathNodes = new LinkedList<>();
 
         for (String at = dstLabel; at != null; at = predecessors.get(at)) {

@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 
 public class GraphManager {
     private final Graph<String, DefaultEdge> graph;
+    private boolean verbose = false;
 
     public GraphManager() {
         this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
@@ -37,6 +38,10 @@ public class GraphManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 
     @Override
@@ -217,6 +222,10 @@ public class GraphManager {
             strategy = new DFS_Strategy(graph);
         } else {
             return null;
+        }
+
+        if (verbose) {
+            strategy.setVerbose(true);
         }
 
         return strategy.search(srcLabel, dstLabel);

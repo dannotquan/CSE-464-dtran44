@@ -14,4 +14,9 @@ public class BFS_Strategy implements SearchStrategy {
     public Path search(String srcLabel, String dstLabel) {
         return bfs.traverse(srcLabel, dstLabel);
     }
+
+    @Override
+    public void setVerbose(boolean verbose) {
+        bfs.setVerbose(verbose);
+    }
 }
