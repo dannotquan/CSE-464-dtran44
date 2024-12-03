@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
 
 public class GraphManager {
     private final Graph<String, DefaultEdge> graph;
@@ -210,78 +209,17 @@ public class GraphManager {
             return null;
         }
 
+        SearchStrategy strategy;
+
         if (algo == Algorithm.BFS) {
-            Queue<String> queue = new LinkedList<>();
-            Set<String> visited = new HashSet<>();
-            Map<String, String> predecessors = new HashMap<>();
-
-            queue.add(srcLabel);
-            visited.add(srcLabel);
-
-            while (!queue.isEmpty()) {
-                String current = queue.poll();
-
-                if (current.equals(dstLabel)) {
-                    List<String> pathNodes = new LinkedList<>();
-                    for (String at = dstLabel; at != null; at = predecessors.get(at)) {
-                        pathNodes.addFirst(at);
-                    }
-                    return new Path(pathNodes);
-                }
-
-                for (DefaultEdge edge : graph.outgoingEdgesOf(current)) {
-                    String neighbor = graph.getEdgeTarget(edge);
-                    if (!visited.contains(neighbor)) {
-                        visited.add(neighbor);
-                        queue.add(neighbor);
-                        predecessors.put(neighbor, current);
-                    }
-                }
-            }
-
+            strategy = new BFS_Strategy(graph);
+        } else if (algo == Algorithm.DFS) {
+            strategy = new DFS_Strategy(graph);
+        } else {
             return null;
         }
 
-        if (algo == Algorithm.DFS) {
-            Set<String> discovered = new HashSet<>();
-            Map<String, String> predecessors = new HashMap<>();
-            Stack<Iterator<DefaultEdge>> stack = new Stack<>();
-            Stack<String> nodeStack = new Stack<>();
-
-            discovered.add(srcLabel);
-            nodeStack.push(srcLabel);
-            stack.push(graph.outgoingEdgesOf(srcLabel).iterator());
-
-            while (!stack.isEmpty()) {
-                Iterator<DefaultEdge> edges = stack.peek();
-
-                if (edges.hasNext()) {
-                    DefaultEdge edge = edges.next();
-                    String neighbor = graph.getEdgeTarget(edge);
-
-                    if (!discovered.contains(neighbor)) {
-                        discovered.add(neighbor);
-                        predecessors.put(neighbor, nodeStack.peek());
-                        if (neighbor.equals(dstLabel)) {
-                            List<String> pathNodes = new LinkedList<>();
-                            for (String node = dstLabel; node != null; node = predecessors.get(node)) {
-                                pathNodes.addFirst(node);
-                            }
-                            return new Path(pathNodes);
-                        }
-                        nodeStack.push(neighbor);
-                        stack.push(graph.outgoingEdgesOf(neighbor).iterator());
-                    }
-                } else {
-                    stack.pop();
-                    nodeStack.pop();
-                }
-            }
-
-            return null;
-        }
-
-        return null;
+        return strategy.search(srcLabel, dstLabel);
     }
 
     public enum Algorithm {

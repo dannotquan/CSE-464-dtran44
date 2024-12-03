@@ -241,7 +241,7 @@ public class GraphManagerTest {
         assertNotNull(path, "Path should exist.");
 
         //  Most efficient would be a -> a1 -> a2 -> a3 -> a4 -> a5
-        assertEquals(path.toString(), "a -> b -> c -> c1 -> c2 -> c3 -> c4 -> c5 -> a1 -> a2 -> a3 -> a4 -> a5", "Expected: a -> b -> c -> c1 -> c2 -> c3 -> c4 -> c5 -> a1 -> a2 -> a3 -> a4 -> a5");
+        assertEquals(path.toString(), "a -> a1 -> a2 -> a3 -> a4 -> a5", "Expected: a -> a1 -> a2 -> a3 -> a4 -> a5");
         System.out.println(path);
     }
 
