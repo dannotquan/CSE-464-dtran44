@@ -16,19 +16,15 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
 
 public class GraphManager {
-    public enum Algorithm {
-        BFS,
-        DFS
-    }
-
     private final Graph<String, DefaultEdge> graph;
 
     public GraphManager() {
         this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
     }
+
+    private boolean verbose = false;
 
     public Graph<String, DefaultEdge> getGraph() {
         return this.graph;
@@ -43,6 +39,10 @@ public class GraphManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 
     @Override
@@ -67,6 +67,10 @@ public class GraphManager {
         return sb.toString();
     }
 
+    private void printNodeNotExist(String label) {
+        System.out.println("Node \"" + label + "\" doesn't exist in graph.");
+    }
+
     public void outputGraph(String filepath) {
         try {
             Files.writeString(Paths.get(filepath), toString());
@@ -76,7 +80,9 @@ public class GraphManager {
     }
 
     private boolean addN(String label) {
-        if (graph.containsVertex(label)) {
+        boolean containsVertex = graph.containsVertex(label);
+
+        if (containsVertex) {
             return true;
         }
 
@@ -113,7 +119,9 @@ public class GraphManager {
         this.addN(srcLabel);
         this.addN(dstLabel);
 
-        if (graph.containsEdge(srcLabel, dstLabel)) {
+        boolean containsEdge = graph.containsEdge(srcLabel, dstLabel);
+
+        if (containsEdge) {
             System.out.println("Edge from \"" + srcLabel + "\" to \"" + dstLabel + "\" already in graph.");
             return false;
         }
@@ -123,7 +131,7 @@ public class GraphManager {
     }
 
     public void outputDOTGraph(String path) {
-        DOTExporter<String, DefaultEdge> exporter = new DOTExporter<>(v -> v.toString());
+        DOTExporter<String, DefaultEdge> exporter = new DOTExporter<>(v -> v);
 
         try {
             exporter.exportGraph(graph, Files.newBufferedWriter(Paths.get(path)));
@@ -133,7 +141,7 @@ public class GraphManager {
     }
 
     public void outputGraphics(String path, String format) {
-        DOTExporter<String, DefaultEdge> exporter = new DOTExporter<>(v -> v.toString());
+        DOTExporter<String, DefaultEdge> exporter = new DOTExporter<>(v -> v);
 
         Format fileFormat = switch (format.toLowerCase()) {
             case "svg" -> Format.SVG;
@@ -160,7 +168,7 @@ public class GraphManager {
 
     public boolean removeNode(String label) {
         if (!graph.containsVertex(label)) {
-            System.out.println("Node \"" + label + "\" doesn't exist in graph.");
+            printNodeNotExist(label);
             return false;
         }
 
@@ -183,7 +191,9 @@ public class GraphManager {
     }
 
     public boolean removeEdge(String srcLabel, String dstLabel) {
-        if (!graph.containsEdge(srcLabel, dstLabel)) {
+        boolean containsEdge = graph.containsEdge(srcLabel, dstLabel);
+
+        if (!containsEdge) {
             System.out.println("Edge from \"" + srcLabel + "\" to \"" + dstLabel + "\" doesn't exist in graph.");
             return false;
         }
@@ -194,86 +204,39 @@ public class GraphManager {
 
     public Path GraphSearch(String srcLabel, String dstLabel, Algorithm algo) {
         if (!graph.containsVertex(srcLabel)) {
-            System.out.println("Source node \"" + srcLabel + "\" doesn't exist in graph.");
+            System.out.print("Source ");
+            printNodeNotExist(srcLabel);
             return null;
         }
 
         if (!graph.containsVertex(dstLabel)) {
-            System.out.println("Destination node \"" + dstLabel + "\" doesn't exist in graph.");
+            System.out.print("Destination ");
+            printNodeNotExist(dstLabel);
             return null;
         }
+
+        SearchStrategy strategy;
 
         if (algo == Algorithm.BFS) {
-            Queue<String> queue = new LinkedList<>();
-            Set<String> visited = new HashSet<>();
-            Map<String, String> predecessors = new HashMap<>();
-
-            queue.add(srcLabel);
-            visited.add(srcLabel);
-
-            while (!queue.isEmpty()) {
-                String current = queue.poll();
-
-                if (current.equals(dstLabel)) {
-                    List<String> pathNodes = new LinkedList<>();
-                    for (String at = dstLabel; at != null; at = predecessors.get(at)) {
-                        pathNodes.add(0, at);
-                    }
-                    return new Path(pathNodes);
-                }
-
-                for (DefaultEdge edge : graph.outgoingEdgesOf(current)) {
-                    String neighbor = graph.getEdgeTarget(edge);
-                    if (!visited.contains(neighbor)) {
-                        visited.add(neighbor);
-                        queue.add(neighbor);
-                        predecessors.put(neighbor, current);
-                    }
-                }
-            }
-
+            strategy = new BFS_Strategy(graph);
+        } else if (algo == Algorithm.DFS) {
+            strategy = new DFS_Strategy(graph);
+        } else if (algo == Algorithm.RANDOM_WALK) {
+            strategy = new RandomWalk_Strategy(graph);
+        } else {
             return null;
         }
 
-        if (algo == Algorithm.DFS) {
-            Set<String> discovered = new HashSet<>();
-            Map<String, String> predecessors = new HashMap<>();
-            Stack<Iterator<DefaultEdge>> stack = new Stack<>();
-            Stack<String> nodeStack = new Stack<>();
-
-            discovered.add(srcLabel);
-            nodeStack.push(srcLabel);
-            stack.push(graph.outgoingEdgesOf(srcLabel).iterator());
-
-            while (!stack.isEmpty()) {
-                Iterator<DefaultEdge> edges = stack.peek();
-
-                if (edges.hasNext()) {
-                    DefaultEdge edge = edges.next();
-                    String neighbor = graph.getEdgeTarget(edge);
-
-                    if (!discovered.contains(neighbor)) {
-                        discovered.add(neighbor);
-                        predecessors.put(neighbor, nodeStack.peek());
-                        if (neighbor.equals(dstLabel)) {
-                            List<String> pathNodes = new LinkedList<>();
-                            for (String node = dstLabel; node != null; node = predecessors.get(node)) {
-                                pathNodes.add(0, node);
-                            }
-                            return new Path(pathNodes);
-                        }
-                        nodeStack.push(neighbor);
-                        stack.push(graph.outgoingEdgesOf(neighbor).iterator());
-                    }
-                } else {
-                    stack.pop();
-                    nodeStack.pop();
-                }
-            }
-
-            return null;
+        if (verbose) {
+            strategy.setVerbose(true);
         }
 
-        return null;
+        return strategy.search(srcLabel, dstLabel);
+    }
+
+    public enum Algorithm {
+        BFS,
+        DFS,
+        RANDOM_WALK
     }
 }
