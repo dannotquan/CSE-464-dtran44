@@ -19,11 +19,12 @@ import java.nio.file.Paths;
 
 public class GraphManager {
     private final Graph<String, DefaultEdge> graph;
-    private boolean verbose = false;
 
     public GraphManager() {
         this.graph = new DefaultDirectedGraph<>(DefaultEdge.class);
     }
+
+    private boolean verbose = false;
 
     public Graph<String, DefaultEdge> getGraph() {
         return this.graph;
@@ -220,6 +221,8 @@ public class GraphManager {
             strategy = new BFS_Strategy(graph);
         } else if (algo == Algorithm.DFS) {
             strategy = new DFS_Strategy(graph);
+        } else if (algo == Algorithm.RANDOM_WALK) {
+            strategy = new RandomWalk_Strategy(graph);
         } else {
             return null;
         }
@@ -233,6 +236,7 @@ public class GraphManager {
 
     public enum Algorithm {
         BFS,
-        DFS
+        DFS,
+        RANDOM_WALK
     }
 }
