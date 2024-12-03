@@ -200,16 +200,6 @@ public class GraphManagerTest {
     }
 
     @Test
-    public void BFS_tera_performance_test() throws URISyntaxException {
-//        GraphManager graphManager = new GraphManager();
-//        graphManager.parseGraph(getResourcePath("tera_graph.dot"));
-//
-//        daniel.tran.Path path = graphManager.GraphSearch("a", "z99999", GraphManager.Algorithm.BFS);
-//        assertNotNull(path, "Path should exist.");
-//        System.out.println(path);
-    }
-
-    @Test
     public void DFS_test_1() throws URISyntaxException {
         GraphManager graphManager = new GraphManager();
         graphManager.parseGraph(getResourcePath("test_dfs_least_efficient.dot"));
@@ -293,15 +283,5 @@ public class GraphManagerTest {
         daniel.tran.Path path = graphManager.GraphSearch("a", "z9999", GraphManager.Algorithm.DFS);
         assertNotNull(path, "Path should exist.");
         System.out.println(path);
-    }
-
-    @Test
-    public void DFS_tera_performance_test() throws URISyntaxException {
-//        GraphManager graphManager = new GraphManager();
-//        graphManager.parseGraph(getResourcePath("tera_graph.dot"));
-//
-//        daniel.tran.Path path = graphManager.GraphSearch("a", "z99999", GraphManager.Algorithm.DFS);
-//        assertNotNull(path, "Path should exist.");
-//        System.out.println(path);
     }
 }
